@@ -1,0 +1,32 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.4.RELEASE'
+        springCloudVersion = 'Finchley.RELEASE'
+        mavenAliyun = 'http://maven.aliyun.com/nexus/content/groups/public/'
+        mavenMilestone = 'http://repo.spring.io/milestone/'
+        maven251 = 'http://bridge.realscloud.com:12345/nexus/content/groups/public/'
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:0.5.6.RELEASE"
+    }
+
+    repositories {
+        maven {
+            url "${mavenAliyun}"
+        }
+        maven {
+            url "${mavenMilestone}"
+        }
+    }
+}
+
+def cmd = 'git log --pretty=format:%h -1'
+def commit = cmd.execute().text.trim()
+
+version = version +"-"+ commit
+
+subprojects {
+    apply from:'http://pub.realscloud.com/download/build/micro-service-footer.gradle'
+}

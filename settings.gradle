@@ -1,0 +1,13 @@
+def prefix = 'alipay'
+rootProject.name = prefix + '-service'
+String.metaClass.m = {
+    delegate
+}
+
+def modules = rootDir.listFiles({ it.isDirectory() && it.list().contains('build.gradle') } as FileFilter)*.name*.m()
+
+for (def it : modules) {
+    include(it)
+    def pd = rootDir.toString() + File.separatorChar + it
+    project(":$it").projectDir = pd as File
+}

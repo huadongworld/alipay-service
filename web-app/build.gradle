@@ -1,0 +1,35 @@
+version = 'v1.0.2'
+archivesBaseName="$rootProject.name"
+
+def timestamp1 = new Date().format('yyyyMMddHHmmssSSS', TimeZone.getTimeZone('GMT+8'))
+def cmd = 'git log --pretty=format:%h -1'
+def commit = cmd.execute().text.trim()
+
+version = timestamp1 +"-"+ version +"-"+ commit
+
+task copyJars(type: Copy, overwrite: true) {
+    group = "build"
+    from configurations.compile into "${buildDir}/libs/lib" // 目标位置
+    configurations.compile.dependencies.each {
+        if(it instanceof org.gradle.api.internal.artifacts.dependencies.DefaultProjectDependency){
+            exclude("${it.dependencyProject.archivesBaseName}-${it.dependencyProject.version}.jar")
+        }
+    }
+}
+
+dependencies {
+
+    //依赖api module
+    compile project(apiModule())
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Finchley.SR1'
+    }
+}
+
+def isFilePrefixed(file) {
+    return (file.name ==~ '^V\\d+__.*\\.(sql|java)\$')
+}

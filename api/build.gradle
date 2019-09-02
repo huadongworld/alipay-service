@@ -1,0 +1,8 @@
+version = '1.0.0-SNAPSHOT'
+archivesBaseName = 'payment-api'
+
+dependencies {
+    compile group: 'com.realscloud', name: 'web-common', version: '1.0.0-SNAPSHOT'
+}
+
+apply from:'http://pub.realscloud.com/download/build/micro-service-footer-api.gradle'
